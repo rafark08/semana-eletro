@@ -12,25 +12,39 @@
         body {
             margin: 0;
             background: #002147;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            overflow: hidden;
             font-family: 'Arial Black', Arial, sans-serif;
             position: relative;
-            cursor: pointer;
+            overflow-x: hidden;
             touch-action: manipulation;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .content-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            box-sizing: border-box;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         canvas {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 1;
             transition: filter 1s ease-in-out;
+            pointer-events: none;
         }
 
         .blurred {
@@ -42,23 +56,20 @@
             font-size: 2rem;
             font-weight: bold;
             text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            position: relative;
             z-index: 5;
             opacity: 0;
             width: 90%;
             max-width: 1000px;
             transition: all 1s ease-in-out;
-            margin: 0;
+            margin: 20px 0;
             padding: 20px 0;
             line-height: 1.3;
         }
 
         .title-top {
-            top: 10% !important;
-            transform: translateX(-50%) !important;
+            margin-top: 10vh !important;
+            margin-bottom: 5vh !important;
         }
 
         .text-visible {
@@ -93,10 +104,7 @@
         }
 
         .info-boxes {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translateX(-50%);
+            position: relative;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -106,6 +114,7 @@
             max-width: 500px;
             justify-content: center;
             align-items: center;
+            margin-bottom: 100px;
         }
 
         .info-box {
@@ -277,27 +286,30 @@
 </head>
 <body>
     <canvas id="electric-canvas"></canvas>
-    <div id="message">VIII SEMANA ACADÊMICA DE ELETROELETRÔNICA</div>
     
-    <div class="info-boxes" id="info-boxes">
-        <div class="info-box">
-            <div class="info-title">O QUE É?</div>
-            <div class="info-content">
-                É um evento acadêmico que reúne palestras, oficinas e gincanas para alunos de eletroeletrônica do IFC Videira.
+    <div class="content-wrapper">
+        <div id="message">VIII SEMANA ACADÊMICA DE ELETROELETRÔNICA</div>
+        
+        <div class="info-boxes" id="info-boxes">
+            <div class="info-box">
+                <div class="info-title">O QUE É?</div>
+                <div class="info-content">
+                    É um evento acadêmico que reúne palestras, oficinas e gincanas para alunos de eletroeletrônica do IFC Videira.
+                </div>
             </div>
-        </div>
-        <div class="info-box">
-            <div class="info-title">ONDE SERÁ?</div>
-            <div class="info-content">
-                No Instituto Federal Catarinense - Campus Videira. 
-                
-                Endereço: SC 135, km 125 - Bairro Campo Experimental - Videira - SC - CEP 89560-000.
+            <div class="info-box">
+                <div class="info-title">ONDE SERÁ?</div>
+                <div class="info-content">
+                    No Instituto Federal Catarinense - Campus Videira. 
+                    
+                    Endereço: SC 135, km 125 - Bairro Campo Experimental - Videira - SC - CEP 89560-000.
+                </div>
             </div>
-        </div>
-        <div class="info-box">
-            <div class="info-title">QUANDO SERÁ?</div>
-            <div class="info-content">
-                À definir.
+            <div class="info-box">
+                <div class="info-title">QUANDO SERÁ?</div>
+                <div class="info-content">
+                    À definir.
+                </div>
             </div>
         </div>
     </div>
@@ -558,7 +570,20 @@
             
             window.addEventListener('resize', handleResize);
             
-            document.addEventListener('touchstart', function() {}, {passive: true});
+            // Prevenir zoom em dispositivos móveis
+            document.addEventListener('touchstart', function(e) {
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Suavizar a rolagem em mobile
+            document.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            
+            // Habilitar scroll suave
+            document.documentElement.style.scrollBehavior = 'smooth';
         }
 
         window.onload = init;
